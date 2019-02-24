@@ -19,6 +19,9 @@ package opdcontribnotification;
 import java.io.FileInputStream;
 import java.io.UnsupportedEncodingException;
 
+import java.nio.file.*;
+import java.text.MessageFormat;
+
 import java.util.Date;
 import java.util.Properties;
 import java.util.Vector;
@@ -76,11 +79,13 @@ public class OPDContribNotification {
     static String bodyNotif1;
     static String bodyNotif2;
     static String footerNotif;
+    static String template;
 
     /**
     * @param args the command line arguments
     */
     public static void main(String[] args) {
+	System.setProperty("mail.mime.charset", "true");
         try {
             loadConf("conf/notification.properties");
             loginOPD(prodocUser, prodocPassword);
@@ -139,6 +144,7 @@ public class OPDContribNotification {
         bodyNotif1 = p.getProperty("bodyNotif1");
         bodyNotif2 = p.getProperty("bodyNotif2");
         footerNotif = p.getProperty("footerNotif");
+	template = p.getProperty("template");
     }
     
     /**
@@ -211,13 +217,19 @@ public class OPDContribNotification {
      */
     private static void sendMailContrib(Record Rec) {
         try {
-        String Destinatario=(String)Rec.getAttr(emailAttr).getValue();
-        String contributorName=(String)Rec.getAttr(nameAttr).getValue();
-        String subject = subjectContrib;
-        String message= "<p>Hola " + contributorName + ",</p>";
-        message += bodyContrib;
-        message += footerContrib;
-        sendEmail (Destinatario, subject, message);
+		String Destinatario=(String)Rec.getAttr(emailAttr).getValue();
+		String contributorName=(String)Rec.getAttr(nameAttr).getValue();
+		String subject=subjectContrib;
+		String message;
+		if (template.isEmpty()) {
+			message = "<p>Hi " + contributorName + ",</p>";
+			message += bodyContrib;
+			message += footerContrib;	
+		} else {
+			message = readHTML(template);
+			message = message.replaceAll("%contributor", contributorName);
+		}
+		sendEmail (Destinatario, subject, message);
         } catch (Exception Ex) {
             Ex.printStackTrace();
             }
@@ -315,6 +327,17 @@ public class OPDContribNotification {
         } catch (Exception Ex) {
             Ex.printStackTrace();
         }
+    }
+    /**
+     * 
+     * @param fileName
+     * @return
+     * @throws Exception 
+     */
+    public static String readHTML(String fileName)throws Exception { 
+	String data = ""; 
+	data = new String(Files.readAllBytes(Paths.get(fileName))); 
+	return data;
     }
 
 }

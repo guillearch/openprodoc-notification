@@ -10,6 +10,7 @@ The code is licensed under the [GNU Affero General Public License v3.0](https://
 
 * Sending an automatic thank-you email to contributors every time they submit new content through the Contribution Module.
 * Sending automatic email notifications to a specific group of OpenProdoc users if new content is submitted to a specific folder type.
+* Supports HTML templates.
 
 ## Requirements
 
@@ -23,7 +24,8 @@ This add-on has been developed and tested on GNU/Linux, but it should work prope
 1. Download this repository. It is not mandatory to run it in the same machine used for your OpenProdoc instance.
 2. Open **ProdocRem.properties** with an editor and change the properties as needed. This file is used to establish a remote connection with the OpenProdoc database.
 3. Open **notification.properties** with an editor and change the properties as needed. This file is used to define the variables of the add-on, such as the email address responsible of sending the emails, the group of users that will receive the notifications, etc.
-4. Open the **OPDContribNotification** file supported by your Operating System (.sh, .command or .bat) with an editor and change the properties as needed. This file is used to start the add-on. Note that you can create different launcher scripts with different configurations. This is useful if you want to set up a task to notify contributors and another one to notify OpenProdoc users.
+4. If you want to use an **HTML template** for the thank-you email, write the path to the template in the "template" field of notification.properties. You can use the keyword `%contributor` in the template to create a field for the contributor's first name.
+5. Open the **OPDContribNotification** file supported by your Operating System (.sh, .command or .bat) with an editor and change the properties as needed. This file is used to start the add-on. Note that you can create different launcher scripts with different configurations. This is useful if you want to set up a task to notify contributors and another one to notify OpenProdoc users.
 
 **Important**: If you aim to use a Gmail address to send the notifications, you must [turn on access for less secure apps](https://myaccount.google.com/lesssecureapps) in the Gmail account. For security reasons, it is highly recommended to use a dedicated address.
 
